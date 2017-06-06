@@ -7,5 +7,8 @@
     "test": "nodemon index.js"
   },
   "author": "Phoenix",
-  "license": "GPL-3.0"
+  "license": "GPL-3.0",
+  "dependencies": {
+    "discord.js": "^11.1.0"
+  }
 }
