@@ -27,7 +27,7 @@ function messageRecieved(m) {
 function parseCommand(command, message) {
     let args = command.split(/\s/) // For easy access later
     let passArgs = args.splice(1) // Easy to pass into commands, they don't need to know EXACTLY what the user typed
-    let commandObject = commands.find((c) => c[0] == args[0].toLowerCase())
+    let commandObject = commands.find((c) => c[0] == args[0].toLowerCase()) // Find the actual command from commands
     if (commandObject == undefined) {
         message.reply("Command not found.").catch(messageCatch)
     } else {
@@ -52,22 +52,22 @@ function addCharacter({ [0]: newName, [1]: newGender, [2]: newAge, [3]: newSpeci
 // Remove character from character list
 function removeCharacter({ [0]: newName }) {
     characters = characters.filter(({ name }) => name != newName)
-    return "All characters with the name \"" + newName + "\" have been spliced from the character array."
+    return `All characters with the name ${newName} have been spliced from the character array.`
 }
 
 // I WoNdeR wHat tHIs dOes
 function characterExists(name) {
-    return characters.find((char) => char.name.toLowerCase() == name.toLowerCase())
+    return characters.find((char) => char.name.toLowerCase() == name.toLowerCase()) // Returns undefined if character not found, otherwise returns character
 }
 
 // Return list of all characters in easy to read string format
 function listCharacters() {
-    return characters.reduce((str, { name, gender, age, species }) => str + ('"' + name + '": ' + age + ", " + gender + ", " + species + "\n"), "List of characters: \n")
+    return characters.reduce((str, { name, gender, age, species }) => str + (`${name}: ${age}, ${gender}, ${species}\n`), "List of characters: \n")
 }
 
 // Return a brief description of the character
 function describeCharacter({ [0]: newName }) {
-    let char = characters.find(({ name }) => newName == name)
+    let char = characterExists(newName)
     if (char != undefined) {
         return `${char.name} is a ${char.gender} ${char.species} that is ${char.age} years old`
     }
@@ -77,7 +77,7 @@ function describeCharacter({ [0]: newName }) {
 // Give help on commands
 function helpCommand({ [0]: inputCommand }) {
     if (inputCommand == undefined) {
-        return listCommands()
+        return listCommands() // If nothing passed as an argument, all commands will be listed
     } else {
         let foundCommand = commands.find((c) => c[0] == inputCommand.toLowerCase())
         if (foundCommand != undefined) {
