@@ -26,10 +26,10 @@ function messageRecieved(m) {
 }
 
 // Called when message posted and started with commandChar
-function parseCommand(command, message) {
-    let args = command.split(/\s/) // For easy access later
-    let passArgs = args.splice(1) // Easy to pass into commands, they don't need to know EXACTLY what the user typed
-    let commandObject = commands.find((c) => c[0] == args[0].toLowerCase()) // Find the actual command from commands
+function parseCommand(commandText, message) {
+    let command = commandText.split(/\s/)[0] // The actual command to look for in commands
+    let passArgs = commandText.substring(commandText.indexOf(" ") + 1).split(/,\s*/) // For easy access later
+    let commandObject = commands.find((c) => c[0] == command.toLowerCase()) // Find the actual command from commands
     if (commandObject == undefined) {
         message.reply("Command not found.").catch(messageCatch)
     } else {
