@@ -15,7 +15,9 @@ const commands = [
     ["help", helpCommand, "Get help using the bot", "command name (optional)"],
     ["changecommandchar", ({ [0]: newChar }) => { commandChar = newChar || ";"; return `Changed commandChar to ${commandChar}` }, "Change the command character used by the bot (default ;)", "new char"],
     ["savecharacters", saveCharacters, "Save characters to characters.json", "none"],
-    ["loadcharacters", loadCharacters, "Load characters from characters.json, the backup created with savecharacters", "none"]
+    ["loadcharacters", loadCharacters, "Load characters from characters.json, the backup created with savecharacters", "none"],
+    ["editcharacter", changeCharacterProperty, "Change a character's properties (name, gender, etc). Doesn't have to be anything specific", "name, property, value"],
+    ["characterproperties", getCharacterProperties, "Get all properties of a character (set by editcharacter)", "name"]
 ]
 
 // The function that will be called when a message is posted in chat
@@ -90,6 +92,31 @@ function helpCommand({ [0]: inputCommand }) {
     }
 }
 
+// Change the property of a character (name, gender, etc)
+function changeCharacterProperty({ [0]: name, [1]: property, [2]: value }) {
+    let character = characterExists(name)
+    if (character && value) {
+        character[property] = value
+    } else {
+        return "Character or value invalid"
+    }
+    return "Done"
+}
+
+function getCharacterProperties({ [0]: name }) {
+    let character = characterExists(name)
+    if (character) {
+        let characterDescription = ""
+        for (let property in character) {
+            let value = character[property]
+            characterDescription += `${property}: ${value}\n`
+        }
+        return characterDescription
+    } else {
+        return "Character not found"
+    }
+}
+
 // List all commands
 function listCommands() {
     return commands.reduce(
@@ -113,6 +140,7 @@ function loadCharacters() {
     characters = JSON.parse(fs.readFileSync("characters.json", "utf-8"))
     return "Done"
 }
+
 
 // Connecting things up
 
