@@ -13,7 +13,7 @@ const commands = [
     ["removecharacter", removeCharacter, "Remove a character from the list of characters", "name"],
     ["characterinfo", describeCharacter, "Gives some information about a character", "name"],
     ["help", helpCommand, "Get help using the bot", "command name (optional)"],
-    ["changecommandchar", ({ [0]: newChar }) => { commandChar = newChar || ";"; return `Changed commandChar to ${commandChar}` }, "Change the command character used by the bot (default ;), ", "new char"],
+    ["changecommandchar", ({ [0]: newChar }) => { commandChar = newChar || ";"; return `Changed commandChar to ${commandChar}` }, "Change the command character used by the bot (default ;)", "new char"],
     ["savecharacters", saveCharacters, "Save characters to characters.json", "none"],
     ["loadcharacters", loadCharacters, "Load characters from characters.json, the backup created with savecharacters", "none"]
 ]
