@@ -13,7 +13,9 @@ const commands = [
     ["removecharacter", removeCharacter, "Remove a character from the list of characters", "name"],
     ["characterinfo", describeCharacter, "Gives some information about a character", "name"],
     ["help", helpCommand, "Get help using the bot", "command name (optional)"],
-    ["changecommandchar", ({ [0]: newChar }) => { commandChar = newChar || ";"; return `Changed commandChar to ${commandChar}` }, "Change the command character used by the bot (default ;), ", "new char"]
+    ["changecommandchar", ({ [0]: newChar }) => { commandChar = newChar || ";"; return `Changed commandChar to ${commandChar}` }, "Change the command character used by the bot (default ;), ", "new char"],
+    ["savecharacters", saveCharacters, "Save characters to characters.json", "none"],
+    ["loadcharacters", loadCharacters, "Load characters from characters.json, the backup created with savecharacters", "none"]
 ]
 
 // The function that will be called when a message is posted in chat
@@ -100,6 +102,18 @@ function describeCommand(command) {
     return `${command[0]}: \n\t${command[2]}\n\t${command[3]}\n`
 }
 
+// Save all characters to characters.json
+function saveCharacters() {
+    fs.writeFileSync("characters.json", JSON.stringify(characters))
+    return "Done"
+}
+
+// Load all characters from characters.json
+function loadCharacters() {
+    characters = JSON.parse(fs.readFileSync("characters.json", "utf-8"))
+    return "Done"
+}
+
 // Connecting things up
 
 client.on("ready", () => {
@@ -107,6 +121,10 @@ client.on("ready", () => {
 })
 
 client.on("message", messageRecieved)
+
+// Load characters
+
+loadCharacters()
 
 // Logging in
 client.login(token).catch((e) => { console.error("Error logging in: " + e) })
