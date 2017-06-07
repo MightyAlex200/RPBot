@@ -5,6 +5,16 @@ const token = fs.readFileSync("credentials", "utf-8")
 const messageCatch = e => { console.error("Error replying to message: " + e) }
 let commandChar = ';'
 let characters = []
+const commands = [
+    // [command, function, description, arguments]
+    ["test", () => "working!", "Test command, returns 'working!' if bot is working", "none"],
+    ["addcharacter", addCharacter, "Add a character to the list of characters", "name, gender, age, species"],
+    ["characters", listCharacters, "Returns list of all characters currently registered", "none"],
+    ["removecharacter", removeCharacter, "Remove a character from the list of characters", "name"],
+    ["characterinfo", describeCharacter, "Gives some information about a character", "name"],
+    ["help", helpCommand, "Get help using the bot", "command name (optional)"],
+    ["changecommandchar", ({ [0]: newChar }) => { commandChar = newChar || ";"; return `Changed commandChar to ${commandChar}` }, "Change the command character used by the bot (default ;), ", "new char"]
+]
 
 // The function that will be called when a message is posted in chat
 function messageRecieved(m) {
@@ -17,23 +27,11 @@ function messageRecieved(m) {
 function parseCommand(command, message) {
     let args = command.split(/\s/) // For easy access later
     let passArgs = args.splice(1) // Easy to pass into commands, they don't need to know EXACTLY what the user typed
-    switch (args[0].toLowerCase()) { // This is where the command is actually parsed (case insensitive)
-        case "test": // Simple test command
-            message.reply("working!").catch(messageCatch)
-            break;
-        case "addcharacter":
-            message.reply(addCharacter(passArgs)).catch(messageCatch)
-            break;
-        case "characters":
-            message.reply(listCharacters()).catch(messageCatch)
-            break;
-        case "removecharacter":
-            message.reply(removeCharacter(passArgs)).catch(messageCatch)
-            break;
-        case "characterinfo":
-        case "characterinformation":
-            message.reply(describeCharacter(passArgs)).catch(messageCatch)
-            break;
+    let commandObject = commands.find((c) => c[0] == args[0].toLowerCase())
+    if (commandObject == undefined) {
+        message.reply("Command not found.").catch(messageCatch)
+    } else {
+        message.reply(commandObject[1](passArgs))
     }
 }
 
@@ -51,7 +49,7 @@ function addCharacter({ [0]: newName, [1]: newGender, [2]: newAge, [3]: newSpeci
     return "Created character " + newName
 }
 
-// Guess what this does lol
+// Remove character from character list
 function removeCharacter({ [0]: newName }) {
     characters = characters.filter(({ name }) => name != newName)
     return "All characters with the name \"" + newName + "\" have been spliced from the character array."
@@ -67,12 +65,39 @@ function listCharacters() {
     return characters.reduce((str, { name, gender, age, species }) => str + ('"' + name + '": ' + age + ", " + gender + ", " + species + "\n"), "List of characters: \n")
 }
 
+// Return a brief description of the character
 function describeCharacter({ [0]: newName }) {
     let char = characters.find(({ name }) => newName == name)
     if (char != undefined) {
         return `${char.name} is a ${char.gender} ${char.species} that is ${char.age} years old`
     }
     return `Character ${newName} not found!`
+}
+
+// Give help on commands
+function helpCommand({ [0]: inputCommand }) {
+    if (inputCommand == undefined) {
+        return listCommands()
+    } else {
+        let foundCommand = commands.find((c) => c[0] == inputCommand.toLowerCase())
+        if (foundCommand != undefined) {
+            return describeCommand(foundCommand)
+        } else {
+            return "Command not found."
+        }
+    }
+}
+
+// List all commands
+function listCommands() {
+    return commands.reduce(
+        (str, command) => str + describeCommand(command), "List of commands:\n"
+    )
+}
+
+// Provide a description of a command
+function describeCommand(command) {
+    return `${command[0]}: \n\t${command[2]}\n\t${command[3]}\n`
 }
 
 // Connecting things up
