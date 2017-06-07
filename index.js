@@ -80,7 +80,7 @@ function describeCharacter({ [0]: newName }) {
 
 // Give help on commands
 function helpCommand({ [0]: inputCommand }) {
-    if (inputCommand == undefined) {
+    if (inputCommand == undefined || inputCommand == "help") {
         return listCommands() // If nothing passed as an argument, all commands will be listed
     } else {
         let foundCommand = commands.find((c) => c[0] == inputCommand.toLowerCase())
