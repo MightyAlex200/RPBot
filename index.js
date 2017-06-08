@@ -120,13 +120,13 @@ function getCharacterProperties({ [0]: name }) {
 // List all commands
 function listCommands() {
     return commands.reduce(
-        (str, command) => str + describeCommand(command), "List of commands:\n"
+        (str, command) => str + describeCommand(command), "List of commands: (seperate arguments with comma)\n"
     )
 }
 
 // Provide a description of a command
 function describeCommand(command) {
-    return `${command[0]}: \n\t${command[2]}\n\t${command[3]}\n`
+    return `${command[0]}: \n\t${command[2]}\n\tArguments: ${command[3]}\n`
 }
 
 // Save all characters to characters.json
