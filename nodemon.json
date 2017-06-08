@@ -1,0 +1,6 @@
+{
+    "ignore": [
+        "characters.json",
+        ".gitignore"
+    ]
+}
