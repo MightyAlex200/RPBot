@@ -4,7 +4,7 @@ const fs = require("fs")
 
 const messageCatch = e => { console.error("Error replying to message: " + e) }
 
-commandModule.commandChar = ';'
+commandModule.commandChar = ";"
 
 // The function that will be called when a message is posted in chat
 commandModule.messageRecieved = function (m) {
@@ -17,21 +17,21 @@ commandModule.messageRecieved = function (m) {
 commandModule.parseCommand = function (commandText, message) {
     let command = commandText.split(/\s/)[0] // The actual command to look for in commands
     let passArgs = commandText.substring(commandText.indexOf(" ") + 1).split(/,\s*/) // For easy access later
-    let commandObject = commandModule.commands.find((c) => c[0] == command.toLowerCase()) // Find the actual command from commands
-    if (commandObject == undefined) {
-        message.reply("Command not found.").catch(messageCatch)
-    } else {
+    let commandObject = commandModule.commands.find((c) => c[0] === command.toLowerCase()) // Find the actual command from commands
+    if (commandObject) {
         message.reply(commandObject[1](passArgs))
+    } else {
+        message.reply("Command not found.").catch(messageCatch)
     }
 }
 
 // Give help on commands
 commandModule.helpCommand = function ({ [0]: inputCommand }) {
-    if (inputCommand == undefined || inputCommand == "help") {
+    if (!inputCommand || inputCommand === "help") {
         return commandModule.listCommands() // If nothing passed as an argument, all commands will be listed
     } else {
-        let foundCommand = commandModule.commands.find((c) => c[0] == inputCommand.toLowerCase())
-        if (foundCommand != undefined) {
+        let foundCommand = commandModule.commands.find((c) => c[0] === inputCommand.toLowerCase())
+        if (foundCommand !== undefined) {
             return commandModule.describeCommand(foundCommand)
         } else {
             return "Command not found."

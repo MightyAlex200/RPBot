@@ -20,13 +20,13 @@ characterModule.addCharacter = function ({ [0]: newName, [1]: newGender, [2]: ne
 
 // Remove character from character list
 characterModule.removeCharacter = function ({ [0]: newName }) {
-    characterModule.characters = characterModule.characters.filter(({ name }) => name != newName)
+    characterModule.characters = characterModule.characters.filter(({ name }) => name !== newName)
     return `All characters with the name ${newName} have been spliced from the character array.`
 }
 
 // I WoNdeR wHat tHIs dOes
 characterModule.characterExists = function (name) {
-    return characterModule.characters.find((char) => char.name.toLowerCase() == name.toLowerCase()) // Returns undefined if character not found, otherwise returns character
+    return characterModule.characters.find((char) => char.name.toLowerCase() === name.toLowerCase()) // Returns undefined if character not found, otherwise returns character
 }
 
 // Return list of all characters in easy to read string format
@@ -37,7 +37,7 @@ characterModule.listCharacters = function () {
 // Return a brief description of the character
 characterModule.describeCharacter = function ({ [0]: newName }) {
     let char = characterModule.characterExists(newName)
-    if (char != undefined) {
+    if (char) {
         return `${char.name} is a ${char.gender} ${char.species} that is ${char.age} years old`
     }
     return `Character ${newName} not found!`
