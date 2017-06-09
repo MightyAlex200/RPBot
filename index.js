@@ -6,7 +6,6 @@ const commandModule = require("./commandModule")
 const characterModule = require("./characterModule")
 
 // Connecting things up
-
 client.on("ready", () => {
     console.log("Client ready")
 })
@@ -14,7 +13,6 @@ client.on("ready", () => {
 client.on("message", commandModule.messageRecieved)
 
 // Load characters
-
 characterModule.loadCharacters()
 
 // Logging in
